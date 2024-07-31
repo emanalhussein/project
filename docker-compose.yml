@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  #eureka-server:
+   # image: eureka-server
+    #container_name: eureka-server
+    #ports:
+     # - "8761:8761"
+    #restart: always
+    #networks:
+    #  - eureka-network
+
+    # Database Service (Mysql)
+  mydb:
+    image: mysql:5.7
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: car_app
+      MYSQL_USER: eman
+      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
+    networks:
+      - eureka-network
+
+  gateway-service:
+    image: gateway
+    container_name: gateway-container
+    ports:
+      - "9097:9097"
+    restart: always
+    depends_on:
+      - eureka-server
+    networks:
+      - eureka-network
+
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+networks:
+  eureka-network:
